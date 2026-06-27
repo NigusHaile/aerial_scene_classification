@@ -1,0 +1,101 @@
+project:
+  name: aerial-scene-classification-ucmerced
+  seed: 42
+  device: auto
+  num_classes: 21
+  class_names: null
+paths:
+  data_root: data/Images
+  outputs: outputs
+  figures: outputs/figures
+  checkpoints: bestmodels
+  reports: outputs/reports
+  logs: outputs/logs
+  clean_index: outputs/clean_index.csv
+  splits: outputs/splits.json
+data:
+  image_size: 224
+  channels: 3
+  train_frac: 0.7
+  val_frac: 0.15
+  test_frac: 0.15
+  mean:
+  - 0.485
+  - 0.456
+  - 0.406
+  std:
+  - 0.229
+  - 0.224
+  - 0.225
+  num_workers: 4
+  pin_memory: true
+  cache_images: false
+quality:
+  phash_distance: 4
+  blur_var_threshold: 40.0
+  dark_threshold: 25
+  bright_threshold: 230
+  iso_contamination: 0.02
+  lof_neighbors: 20
+  remove_outliers: false
+augment:
+  hflip_p: 0.5
+  vflip_p: 0.5
+  rotate90_p: 0.5
+  shift_scale_rotate_p: 0.5
+  brightness_contrast_p: 0.5
+  clahe_p: 0.2
+  color_jitter_p: 0.3
+  gauss_noise_p: 0.2
+  grid_distortion_p: 0.2
+  coarse_dropout_p: 0.3
+  rrc_scale_min: 0.7
+imbalance:
+  technique: label_smoothing
+  label_smoothing: 0.1
+  use_class_weights: true
+training:
+  epochs: 40
+  batch_size: 32
+  lr: 0.0003
+  weight_decay: 0.05
+  optimizer: adamw
+  scheduler: cosine
+  warmup_epochs: 3
+  grad_clip: 1.0
+  amp: true
+  early_stop_patience: 8
+  monitor: val_macro_f1
+  label_smoothing: 0.1
+model:
+  name: convnext_tiny
+  pretrained: true
+  drop_rate: 0.2
+  freeze_backbone_epochs: 2
+lora:
+  base_model: vit_base_patch16_224
+  r: 8
+  alpha: 16
+  dropout: 0.1
+  target_modules:
+  - qkv
+  - proj
+optuna:
+  n_trials: 30
+  timeout_minutes: 120
+  epochs_per_trial: 8
+  lr_min: 5.0e-05
+  lr_max: 0.005
+  wd_min: 1.0e-05
+  wd_max: 0.1
+  dropout_min: 0.0
+  dropout_max: 0.5
+  lora_r_choices:
+  - 4
+  - 8
+  - 16
+  - 32
+  batch_choices:
+  - 16
+  - 32
+  - 64

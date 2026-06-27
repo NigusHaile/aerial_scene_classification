@@ -1,0 +1,115 @@
+# ============================================================================
+# Aerial Scene Classification (UC Merced, 21 classes) — Master Configuration
+# ----------------------------------------------------------------------------
+# Everything that controls an experiment lives here. Code never hard-codes a
+# value that could reasonably change. Override any field from the CLI, e.g.:
+#   python main.py --set training.epochs=50 model.name=convnext_tiny
+# ============================================================================
+
+project:
+  name: "aerial-scene-classification-ucmerced"
+  seed: 42
+  device: "auto"            # "auto" -> cuda if available else cpu
+  num_classes: 21
+  class_names: null          # auto-filled from the data directory at runtime
+
+paths:
+  # Point data_root at the extracted dataset. The loader expects:
+  #   <data_root>/<class_name>/<image>.tif
+  data_root: "data/Images"
+  outputs: "results_figures"
+  figures: "results_figures"
+  checkpoints: "bestmodels"
+  clean_index: "results_figures/clean_index.csv"   # CSV of validated (path,label) rows
+  splits: "results_figures/splits.json"            # frozen train/val/test split
+
+data:
+  image_size: 224           # ConvNeXt / ViT native input
+  channels: 3
+  # Stratified split — keeps 100/class balance inside every split.
+  train_frac: 0.70
+  val_frac: 0.15
+  test_frac: 0.15
+  # ImageNet statistics (pretrained backbones expect these).
+  mean: [0.485, 0.456, 0.406]
+  std:  [0.229, 0.224, 0.225]
+  num_workers: 4
+  pin_memory: true
+  cache_images: false       # set true if you have RAM to spare (2100 imgs is fine)
+
+# ---- Data-quality / outlier-removal thresholds (Step 4) --------------------
+quality:
+  phash_distance: 4         # <= this Hamming distance => near-duplicate
+  blur_var_threshold: 40.0  # variance-of-Laplacian below => flagged blurry
+  dark_threshold: 25        # mean luminance below => underexposed
+  bright_threshold: 230     # mean luminance above => overexposed
+  iso_contamination: 0.02   # IsolationForest expected outlier fraction
+  lof_neighbors: 20
+  remove_outliers: false    # report only by default; set true to drop them
+
+augment:
+  hflip_p: 0.5
+  vflip_p: 0.5
+  rotate90_p: 0.5
+  shift_scale_rotate_p: 0.5
+  brightness_contrast_p: 0.5
+  clahe_p: 0.2
+  color_jitter_p: 0.3
+  gauss_noise_p: 0.2
+  grid_distortion_p: 0.2
+  coarse_dropout_p: 0.3
+  rrc_scale_min: 0.7        # RandomResizedCrop lower scale bound
+
+# ---- Class-imbalance strategy (Step 6) -------------------------------------
+# UC Merced is perfectly balanced (100/class), so heavy resampling is wrong.
+# The two techniques most suitable for a *balanced, fine-grained* set are kept:
+#   1) label_smoothing  — regularises confident logits, helps confusable pairs
+#   2) class_weighted   — inverse-frequency weights; a no-op safety net here but
+#                         keeps the pipeline correct if images get quarantined
+imbalance:
+  technique: "label_smoothing"   # one of: label_smoothing | class_weighted
+  label_smoothing: 0.1
+  use_class_weights: true         # passed to the loss when technique=class_weighted
+
+training:
+  epochs: 40
+  batch_size: 32
+  lr: 0.0003
+  weight_decay: 0.05
+  optimizer: "adamw"        # adamw | sgd
+  scheduler: "cosine"       # cosine | onecycle | plateau
+  warmup_epochs: 3
+  grad_clip: 1.0
+  amp: true                 # automatic mixed precision
+  early_stop_patience: 8
+  monitor: "val_macro_f1"   # checkpoint selection metric (Step 11)
+  label_smoothing: 0.1
+
+model:
+  # Single best pretrained backbone for this dataset (see Step 8 rationale).
+  name: "convnext_tiny"     # selected automatically in Step 8; override allowed
+  pretrained: true
+  drop_rate: 0.2
+  freeze_backbone_epochs: 2 # warm up head first, then unfreeze
+
+# ---- ViT-16 + LoRA (Step 8 / Model C) --------------------------------------
+lora:
+  base_model: "vit_base_patch16_224"
+  r: 8
+  alpha: 16
+  dropout: 0.1
+  target_modules: ["qkv", "proj"]
+
+# ---- Optuna hyper-parameter search (Step 9) --------------------------------
+optuna:
+  n_trials: 30
+  timeout_minutes: 120
+  epochs_per_trial: 8       # short proxy training inside each trial
+  lr_min: 0.00005
+  lr_max: 0.005
+  wd_min: 0.00001
+  wd_max: 0.1
+  dropout_min: 0.0
+  dropout_max: 0.5
+  lora_r_choices: [4, 8, 16, 32]
+  batch_choices: [16, 32, 64]
