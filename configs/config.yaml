@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 # Everything that controls an experiment lives here. Code never hard-codes a
 # value that could reasonably change. Override any field from the CLI, e.g.:
-#   python main.py --set training.epochs=50 model.name=convnext_tiny
+#   python main.py --set training.epochs=50 model.name=densenet121
 # ============================================================================
 
 project:
@@ -28,8 +28,8 @@ data:
   channels: 3
   # Stratified split — keeps 100/class balance inside every split.
   train_frac: 0.70
-  val_frac: 0.15
-  test_frac: 0.15
+  val_frac: 0.20
+  test_frac: 0.10
   # ImageNet statistics (pretrained backbones expect these).
   mean: [0.485, 0.456, 0.406]
   std:  [0.229, 0.224, 0.225]
@@ -60,7 +60,7 @@ augment:
   coarse_dropout_p: 0.3
   rrc_scale_min: 0.7        # RandomResizedCrop lower scale bound
 
-# ---- Class-imbalance strategy (Step 6) -------------------------------------
+# Class-imbalance strategy 
 # UC Merced is perfectly balanced (100/class), so heavy resampling is wrong.
 # The two techniques most suitable for a *balanced, fine-grained* set are kept:
 #   1) label_smoothing  — regularises confident logits, helps confusable pairs
@@ -72,7 +72,7 @@ imbalance:
   use_class_weights: true         # passed to the loss when technique=class_weighted
 
 training:
-  epochs: 40
+  epochs: 20
   batch_size: 32
   lr: 0.0003
   weight_decay: 0.05
@@ -81,18 +81,17 @@ training:
   warmup_epochs: 3
   grad_clip: 1.0
   amp: true                 # automatic mixed precision
-  early_stop_patience: 8
-  monitor: "val_macro_f1"   # checkpoint selection metric (Step 11)
+  early_stop_patience: 5
+  monitor: "val_macro_f1"   # checkpoint selection metric
   label_smoothing: 0.1
 
 model:
-  # Single best pretrained backbone for this dataset (see Step 8 rationale).
-  name: "convnext_tiny"     # selected automatically in Step 8; override allowed
+  name: "densenet121"
   pretrained: true
   drop_rate: 0.2
   freeze_backbone_epochs: 2 # warm up head first, then unfreeze
 
-# ---- ViT-16 + LoRA (Step 8 / Model C) --------------------------------------
+#  ViT-16 + LoRA 
 lora:
   base_model: "vit_base_patch16_224"
   r: 8
@@ -100,7 +99,7 @@ lora:
   dropout: 0.1
   target_modules: ["qkv", "proj"]
 
-# ---- Optuna hyper-parameter search (Step 9) --------------------------------
+# Optuna hyper-parameter search
 optuna:
   n_trials: 30
   timeout_minutes: 120

@@ -1,4 +1,5 @@
 """Utilities — configuration, figure saving, and reproducibility."""
+
 from __future__ import annotations
 
 import os
@@ -15,9 +16,9 @@ import torch
 import yaml
 
 
-# ============================================================================
+# =============
 # Configuration
-# ============================================================================
+# =============
 
 class DotDict(dict):
     """A dict whose keys are also reachable as attributes, recursively."""
@@ -104,9 +105,9 @@ def ensure_dirs(cfg: DotDict) -> None:
         Path(cfg.paths[key]).mkdir(parents=True, exist_ok=True)
 
 
-# ============================================================================
+# =============
 # Figure saving
-# ============================================================================
+# ==============
 
 def save_fig(fig: plt.Figure, path: str | Path, dpi: int = 150) -> Path:
     """Save a matplotlib figure at consistent DPI and close it."""
@@ -117,9 +118,9 @@ def save_fig(fig: plt.Figure, path: str | Path, dpi: int = 150) -> Path:
     return path
 
 
-# ============================================================================
+# ===============
 # Reproducibility
-# ============================================================================
+# ===============
 
 def set_seed(seed: int = 42, deterministic: bool = True) -> None:
     """Seed Python, NumPy, and Torch; optionally force deterministic cuDNN."""

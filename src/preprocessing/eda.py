@@ -207,10 +207,10 @@ def class_similarity(df: pd.DataFrame, cfg, fig_dir: str | Path) -> Optional[pd.
 def run_eda(cfg, clean: pd.DataFrame, desc: pd.DataFrame) -> None:
     """Run the full EDA suite and save all figures to cfg.paths.figures."""
     fig_dir = cfg.paths.figures
-    plot_class_distribution(clean, fig_dir)
+    # plot_class_distribution(clean, fig_dir)
     plot_sample_grid(clean, fig_dir)
-    plot_rgb_distribution(clean, fig_dir)
-    plot_resolution(desc, fig_dir)
+    # plot_rgb_distribution(clean, fig_dir)
+    # plot_resolution(desc, fig_dir)
     plot_descriptor_correlation(desc, fig_dir)
     plot_embeddings(clean, cfg, fig_dir)
     class_similarity(clean, cfg, fig_dir)

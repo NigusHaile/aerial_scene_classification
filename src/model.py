@@ -2,7 +2,7 @@
 
 Combines:
   - CustomCNN  (residual + SE-attention CNN, Model A)
-  - Pretrained (timm-based factory + backbone selection, Model B)
+  - Pretrained (DenseNet-121 via timm, Model B)
   - ViT + LoRA (parameter-efficient fine-tuning, Model C)
   - Model utilities (parameter counts, FLOPs, summary)
 """
@@ -16,9 +16,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-# ============================================================================
-# Custom CNN (Model A)
-# ============================================================================
+# ==========
+# Custom CNN 
+# ==========
 
 class SEBlock(nn.Module):
     """Squeeze-and-Excitation channel attention."""
@@ -102,19 +102,12 @@ def build_custom_cnn(cfg) -> CustomCNN:
                      drop_rate=cfg.model.drop_rate)
 
 
-# ============================================================================
-# Pretrained backbone (Model B)
-# ============================================================================
+# ===================
+# Pretrained backbone
+# ===================
 
-CANDIDATES: List[str] = [
-    "convnext_tiny",
-    "efficientnet_b3",
-    "resnet50",
-    "densenet121",
-]
-
-
-def build_pretrained(name: str, num_classes: int, pretrained: bool = True,
+def build_pretrained(name: str = "densenet121", num_classes: int = 21,
+                     pretrained: bool = True,
                      drop_rate: float = 0.2) -> nn.Module:
     """Create a timm backbone with a fresh classification head."""
     return timm.create_model(
@@ -130,20 +123,6 @@ def set_backbone_trainable(model: nn.Module, trainable: bool) -> None:
         p.requires_grad = trainable or (id(p) in head_params)
 
 
-def select_best_backbone(splits, cfg, train_one_fn,
-                         candidates: List[str] | None = None) -> Tuple[str, dict]:
-    """Probe candidate backbones; return (best_name, scores dict)."""
-    candidates = candidates or CANDIDATES
-    scores = {}
-    for name in candidates:
-        model = build_pretrained(name, cfg.project.num_classes,
-                                 cfg.model.pretrained, cfg.model.drop_rate)
-        scores[name] = float(train_one_fn(model, splits, cfg, epochs=2))
-        del model
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-    best = max(scores, key=scores.get)
-    return best, scores
 
 
 # ===============
@@ -183,9 +162,9 @@ def build_vit_lora(cfg) -> Tuple[nn.Module, dict]:
     }
 
 
-# ============================================================================
+# ===============
 # Model utilities
-# ============================================================================
+# ===============
 
 def count_parameters(model: nn.Module) -> Dict[str, int]:
     total = sum(p.numel() for p in model.parameters())

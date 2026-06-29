@@ -6,19 +6,17 @@ project:
   class_names: null
 paths:
   data_root: data/Images
-  outputs: outputs
-  figures: outputs/figures
+  outputs: results_figures
+  figures: results_figures
   checkpoints: bestmodels
-  reports: outputs/reports
-  logs: outputs/logs
-  clean_index: outputs/clean_index.csv
-  splits: outputs/splits.json
+  clean_index: results_figures/clean_index.csv
+  splits: results_figures/splits.json
 data:
   image_size: 224
   channels: 3
   train_frac: 0.7
-  val_frac: 0.15
-  test_frac: 0.15
+  val_frac: 0.2
+  test_frac: 0.1
   mean:
   - 0.485
   - 0.456
@@ -55,7 +53,7 @@ imbalance:
   label_smoothing: 0.1
   use_class_weights: true
 training:
-  epochs: 40
+  epochs: 20
   batch_size: 32
   lr: 0.0003
   weight_decay: 0.05
@@ -64,11 +62,11 @@ training:
   warmup_epochs: 3
   grad_clip: 1.0
   amp: true
-  early_stop_patience: 8
+  early_stop_patience: 5
   monitor: val_macro_f1
   label_smoothing: 0.1
 model:
-  name: convnext_tiny
+  name: densenet121
   pretrained: true
   drop_rate: 0.2
   freeze_backbone_epochs: 2

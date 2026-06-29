@@ -1,4 +1,4 @@
 model,params_m,accuracy,macro_f1,train_time_min,gflops
-densenet121,6.98,0.9778,0.9777,3.46,
-vit_lora,85.81,0.9429,0.9434,2.7,
-custom_cnn,11.27,0.8889,0.8901,6.57,
+vit_lora,86.06,0.9905,0.9905,3.58,
+densenet121,6.98,0.9667,0.9665,2.18,
+custom_cnn,11.27,0.7714,0.7584,2.86,

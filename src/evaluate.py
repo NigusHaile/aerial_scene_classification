@@ -73,9 +73,9 @@ def per_class_f1(y_true: np.ndarray, y_pred: np.ndarray,
     return {name: float(s) for name, s in zip(class_names, scores)}
 
 
-# ============================================================================
+# =====
 # Plots
-# ============================================================================
+# =====
 
 def plot_training_curves(history, fig_dir: str | Path, run_name: str) -> None:
     """Loss + macro-F1/accuracy curves over epochs."""
@@ -150,9 +150,9 @@ def most_confused_pairs(y_true: np.ndarray, y_pred: np.ndarray,
     return sorted(pairs, key=lambda t: t[2], reverse=True)[:k]
 
 
-# ============================================================================
+# ===========================================
 # Interpretability (GradCAM + error analysis)
-# ============================================================================
+# ===========================================
 
 class GradCAM:
     """Grad-CAM (Selvaraju et al., 2017) via forward/backward hooks."""
@@ -279,10 +279,9 @@ def plot_feature_embedding(features: np.ndarray, labels: np.ndarray,
         save_fig(fig, Path(fig_dir) / f"test_embedding_{name.lower()}_{run_name}.png")
 
 
-# ============================================================================
+# =================
 # Report generation
-# ============================================================================
-
+# =================
 def comparison_table(records: List[Dict]) -> pd.DataFrame:
     """Assemble the model comparison table sorted by macro-F1."""
     df = pd.DataFrame(records)

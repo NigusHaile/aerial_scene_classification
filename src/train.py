@@ -5,6 +5,7 @@ Combines:
   - Trainer (AMP, early stopping, checkpointing, TensorBoard)
   - Optuna hyperparameter optimisation (run_optuna, suggest_common)
 """
+
 from __future__ import annotations
 
 import json
@@ -28,9 +29,9 @@ from src.utils import save_fig, get_device, seed_worker
 from src import evaluate as ev
 
 
-# ============================================================================
+# ==============
 # Loss functions
-# ============================================================================
+# ==============
 
 class FocalLoss(nn.Module):
     """Multi-class focal loss (Lin et al., 2017) — kept for ablation."""
@@ -62,9 +63,9 @@ def build_loss(cfg, class_weights: Optional[torch.Tensor] = None) -> nn.Module:
     return nn.CrossEntropyLoss(weight=weight, label_smoothing=smoothing)
 
 
-# ============================================================================
+# =======
 # Trainer
-# ============================================================================
+# ========
 
 def _make_grad_scaler(enabled: bool):
     try:
@@ -389,45 +390,74 @@ def train_model(name: str, model: nn.Module, splits: Dict, cfg,
     }
 
 
-def run_training(cfg, do_select: bool = True, do_lora: bool = True) -> Dict:
-    """Train Custom CNN + best pretrained backbone + ViT+LoRA; compare; report."""
+def _cfg_with_hp(cfg, hp: dict):
+    """Return a deep copy of cfg with Optuna best-params applied.
+
+    cfg is a DotDict — plain attribute assignment works directly.
+    """
+    from copy import deepcopy
+    c = deepcopy(cfg)
+    if "lr"           in hp: c.training.lr           = hp["lr"]
+    if "weight_decay" in hp: c.training.weight_decay = hp["weight_decay"]
+    if "batch_size"   in hp: c.training.batch_size   = hp["batch_size"]
+    if "optimizer"    in hp: c.training.optimizer    = hp["optimizer"]
+    if "scheduler"    in hp: c.training.scheduler    = hp["scheduler"]
+    if "drop_rate"    in hp: c.model.drop_rate       = hp["drop_rate"]
+    if "lora_r"       in hp:
+        c.lora.r     = hp["lora_r"]
+        c.lora.alpha = hp["lora_r"] * 2
+    return c
+
+
+def run_training(cfg, do_lora: bool = True,
+                 model_hp: dict | None = None) -> Dict:
+    """Train Custom CNN + DenseNet-121 + ViT+LoRA; compare; report.
+
+    model_hp: optional dict mapping model key → Optuna best_params dict, e.g.
+        {"custom_cnn": {...}, "densenet121": {...}, "vit_lora": {...}}
+    Each model trains with its own tuned HPs; cfg is never mutated.
+    """
     from src.model import (build_custom_cnn, build_pretrained, set_backbone_trainable,
-                           build_vit_lora, select_best_backbone)
+                           build_vit_lora)
     from src.preprocessing.splitting import load_splits
 
-    splits = load_splits(cfg.paths.splits)
+    model_hp = model_hp or {}
+    splits    = load_splits(cfg.paths.splits)
     cfg.project.class_names = sorted(splits["label_map"], key=splits["label_map"].get)
     results: List[Dict] = []
 
-    results.append(train_model("custom_cnn", build_custom_cnn(cfg), splits, cfg))
+    #  Custom CNN 
+    cnn_cfg = _cfg_with_hp(cfg, model_hp.get("custom_cnn", {}))
+    print(f"[custom_cnn] lr={cnn_cfg.training.lr:.2e}  wd={cnn_cfg.training.weight_decay:.2e}"
+          f"  drop={cnn_cfg.model.drop_rate:.2f}  bs={cnn_cfg.training.batch_size}"
+          f"  opt={cnn_cfg.training.optimizer}  sched={cnn_cfg.training.scheduler}")
+    results.append(train_model("custom_cnn", build_custom_cnn(cnn_cfg), splits, cnn_cfg))
 
-    if do_select:
-        candidates = list(cfg.model.candidates if hasattr(cfg.model, "candidates")
-                          else ["convnext_tiny", "efficientnet_b3", "resnet50", "densenet121"])
-        print(f"Probing backbones: {candidates}")
-        backbone, scores = select_best_backbone(splits, cfg, _quick_val_f1)
-        for n, s in scores.items():
-            print(f"  {n} -> probe val macroF1 {s:.4f}")
-        print(f"Selected backbone: {backbone}")
-    else:
-        backbone = cfg.model.name
-    cfg.model.name = backbone
-
-    pre = build_pretrained(backbone, cfg.project.num_classes,
-                           cfg.model.pretrained, cfg.model.drop_rate)
+    #  DenseNet-121 
+    pre_cfg = _cfg_with_hp(cfg, model_hp.get("densenet121", {}))
+    print(f"[densenet121] lr={pre_cfg.training.lr:.2e}  wd={pre_cfg.training.weight_decay:.2e}"
+          f"  drop={pre_cfg.model.drop_rate:.2f}  bs={pre_cfg.training.batch_size}"
+          f"  opt={pre_cfg.training.optimizer}  sched={pre_cfg.training.scheduler}")
+    pre = build_pretrained("densenet121", pre_cfg.project.num_classes,
+                           pre_cfg.model.pretrained, pre_cfg.model.drop_rate)
     set_backbone_trainable(pre, False)
     results.append(train_model(
-        backbone, pre, splits, cfg,
-        freeze_epochs=cfg.model.freeze_backbone_epochs,
+        "densenet121", pre, splits, pre_cfg,
+        freeze_epochs=pre_cfg.model.freeze_backbone_epochs,
         unfreeze_fn=lambda m: set_backbone_trainable(m, True),
     ))
 
+    #  ViT-B/16 + LoRA 
     if do_lora:
-        vit, lora_stats = build_vit_lora(cfg)
+        vit_cfg = _cfg_with_hp(cfg, model_hp.get("vit_lora", {}))
+        print(f"[vit_lora]  lr={vit_cfg.training.lr:.2e}  wd={vit_cfg.training.weight_decay:.2e}"
+              f"  lora_r={vit_cfg.lora.r}  lora_alpha={vit_cfg.lora.alpha}"
+              f"  bs={vit_cfg.training.batch_size}  opt={vit_cfg.training.optimizer}")
+        vit, lora_stats = build_vit_lora(vit_cfg)
         print(f"ViT+LoRA trainable: {lora_stats['trainable_pct']:.2f}% of params")
-        results.append(train_model("vit_lora", vit, splits, cfg))
+        results.append(train_model("vit_lora", vit, splits, vit_cfg))
 
-    comp = comparison_table([r["record"] for r in results])
+    comp   = comparison_table([r["record"] for r in results])
     winner = pick_winner(comp)
     comp.to_csv(Path(cfg.paths.outputs) / "model_comparison.csv", index=False)
 

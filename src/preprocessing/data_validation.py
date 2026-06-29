@@ -24,6 +24,10 @@ import cv2
 import numpy as np
 import pandas as pd
 from PIL import Image
+import timm
+import torch
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 
 
 
@@ -183,13 +187,9 @@ def statistical_outliers(desc: pd.DataFrame, z: float = 3.0) -> pd.DataFrame:
 
 def deep_feature_outliers(df: pd.DataFrame, cfg) -> Optional[pd.DataFrame]:
     """Extract pretrained embeddings and flag outliers (IsolationForest + LOF)."""
-    import timm
-    import torch
-    from sklearn.ensemble import IsolationForest
-    from sklearn.neighbors import LocalOutlierFactor
+   
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = timm.create_model("resnet18", pretrained=True, num_classes=0).eval().to(device)
+    model = timm.create_model("resnet50", pretrained=True, num_classes=0).eval().to(device)
     mean = np.array(cfg.data.mean, dtype=np.float32)
     std = np.array(cfg.data.std, dtype=np.float32)
 
