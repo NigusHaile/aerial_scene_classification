@@ -31,9 +31,9 @@ FIG_DIR    = ROOT / "results_figures"
 SKIP_NAMES = {"probe"}
 
 MODEL_META = {
-    "custom_cnn":  {"icon": "🔷", "full": "Custom CNN",      "desc": "Residual + SE-attention CNN",   "color": "#34d399"},
-    "densenet121": {"icon": "🔶", "full": "DenseNet-121",     "desc": "Pretrained dense backbone",     "color": "#f0b429"},
-    "vit_lora":    {"icon": "✨", "full": "ViT-B/16 + LoRA", "desc": "Frozen ViT + PEFT adapters",   "color": "#5eead4"},
+    "custom_cnn":  {"icon": "🔷", "full": "Custom CNN",      "desc": "Residual + SE-attention CNN",   "color": "#5fa88f"},
+    "densenet121": {"icon": "🔶", "full": "DenseNet-121",     "desc": "Pretrained dense backbone",     "color": "#c79a4b"},
+    "vit_lora":    {"icon": "✨", "full": "ViT-B/16 + LoRA", "desc": "Frozen ViT + PEFT adapters",   "color": "#4f96a0"},
 }
 
 CLASS_EMOJIS = {
@@ -67,20 +67,20 @@ st.markdown("""
 
 /* ════════════════════════════════════════════════════════════
    DESIGN TOKENS
-   bg base #080a10 · panel #0d1118 · border #1a212e
-   signature accent — phosphor green #34d399 / #5eead4
-   secondary — amber #f0b429 (warn) · coral #f0556a (error/low conf)
+   bg base #161a22 · panel #1d2330 · border #2a3140
+   signature accent — phosphor green #5fa88f / #4f96a0
+   secondary — amber #c79a4b (warn) · coral #bf6760 (error/low conf)
    type — JetBrains Mono for data/labels, Inter for prose
    ════════════════════════════════════════════════════════════ */
 
 /* ── reset & base ── */
 html, body, [data-testid="stAppViewContainer"],
 [data-testid="stMain"], .main, .block-container {
-    background: #080a10 !important;
+    background: #161a22 !important;
     background-image:
-        radial-gradient(ellipse 1000px 560px at 12% -8%, #11321f3d, transparent 60%),
-        radial-gradient(ellipse 800px 620px at 100% 6%, #0d2a3a38, transparent 60%) !important;
-    color: #e8ecf4;
+        radial-gradient(ellipse 1000px 560px at 12% -8%, #2a3a3422, transparent 60%),
+        radial-gradient(ellipse 800px 620px at 100% 6%, #26303a33, transparent 60%) !important;
+    color: #e6e1d6;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 19px;
 }
@@ -91,7 +91,7 @@ html, body, [data-testid="stAppViewContainer"],
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background: repeating-linear-gradient(
         0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-        rgba(94,234,212,0.012) 3px, rgba(0,0,0,0) 4px
+        rgba(95,168,143,0.04) 3px, rgba(0,0,0,0) 4px
     );
     mix-blend-mode: screen;
 }
@@ -112,31 +112,31 @@ html, body, [data-testid="stAppViewContainer"],
 
 /* ── selectbox: outer trigger box ── */
 [data-testid="stSelectbox"] > div > div {
-    background: #0d1320 !important;
-    border: 1.5px solid #2a3a50 !important;
+    background: #1d2330 !important;
+    border: 1.5px solid #2a3140 !important;
     border-radius: 10px !important;
     min-height: 58px !important;
     padding: 0 !important;
     transition: border-color .15s;
 }
-[data-testid="stSelectbox"] > div > div:hover    { border-color: #2a5f4a !important; }
+[data-testid="stSelectbox"] > div > div:hover    { border-color: #4a7d6c !important; }
 [data-testid="stSelectbox"] > div > div:focus-within {
-    border-color: #34d399 !important;
-    box-shadow: 0 0 0 2px #34d39920 !important;
+    border-color: #5fa88f !important;
+    box-shadow: 0 0 0 2px #5fa88f22 !important;
 }
 
 /* nuclear rule: force ALL text nodes inside the selectbox to be visible,
    excluding only SVG shape elements */
 [data-testid="stSelectbox"] *:not(svg):not(path):not(g):not(circle):not(rect) {
-    color: #e8ecf4 !important;
-    -webkit-text-fill-color: #e8ecf4 !important;
+    color: #e6e1d6 !important;
+    -webkit-text-fill-color: #e6e1d6 !important;
     font-size: 18px !important;
     font-weight: 500 !important;
 }
 
 /* inner value + input padding */
 [data-baseweb="select"] > div:first-child {
-    background: #0d1320 !important;
+    background: #1d2330 !important;
     min-height: 56px !important;
     padding: 10px 18px !important;
     display: flex !important;
@@ -147,14 +147,14 @@ html, body, [data-testid="stAppViewContainer"],
 [data-baseweb="popover"],
 [data-baseweb="popover"] ul,
 [data-baseweb="menu"] {
-    background: #0d1320 !important;
-    border: 1px solid #2a3a50 !important;
+    background: #1d2330 !important;
+    border: 1px solid #2a3140 !important;
     border-radius: 10px !important;
 }
 [data-baseweb="option"] {
-    background: #0d1320 !important;
-    color: #aab4c4 !important;
-    -webkit-text-fill-color: #aab4c4 !important;
+    background: #1d2330 !important;
+    color: #9aa0ab !important;
+    -webkit-text-fill-color: #9aa0ab !important;
     font-size: 18px !important;
     font-weight: 500 !important;
     padding: 14px 18px !important;
@@ -164,15 +164,15 @@ html, body, [data-testid="stAppViewContainer"],
 }
 [data-baseweb="option"]:hover,
 [data-baseweb="option"][aria-selected="true"] {
-    background: #0d2a20 !important;
-    color: #5eead4 !important;
-    -webkit-text-fill-color: #5eead4 !important;
+    background: #1c2b28 !important;
+    color: #4f96a0 !important;
+    -webkit-text-fill-color: #4f96a0 !important;
 }
 
 /* ── radio in body (model selector) ── */
 [data-testid="stRadio"] label {
     font-size: 16px !important;
-    color: #aab4c4 !important;
+    color: #9aa0ab !important;
     font-weight: 500;
     padding: 6px 0;
 }
@@ -180,11 +180,11 @@ html, body, [data-testid="stAppViewContainer"],
 
 /* ── file uploader ── */
 [data-testid="stFileUploader"] {
-    background: #0a0d14 !important;
-    border: 1.5px dashed #1c2530 !important;
+    background: #1a1f2a !important;
+    border: 1.5px dashed #2f3848 !important;
     border-radius: 10px !important;
 }
-[data-testid="stFileUploader"]:hover { border-color: #34d399 !important; }
+[data-testid="stFileUploader"]:hover { border-color: #5fa88f !important; }
 [data-testid="stFileUploaderDropZone"] {
     min-height: 200px !important;
     display: flex !important;
@@ -195,12 +195,12 @@ html, body, [data-testid="stAppViewContainer"],
 }
 [data-testid="stFileUploader"] p,
 [data-testid="stFileUploader"] span,
-[data-testid="stFileUploader"] small { font-size: 17px !important; color: #5b6679 !important; }
+[data-testid="stFileUploader"] small { font-size: 17px !important; color: #9aa0ab !important; }
 
 /* ── buttons ── */
 [data-testid="stButton"] > button {
-    background: linear-gradient(135deg, #1d8c6a, #34d399) !important;
-    color: #06140f !important;
+    background: linear-gradient(135deg, #447b6c, #5fa88f) !important;
+    color: #16231c !important;
     border: none !important;
     border-radius: 8px !important;
     font-size: 18px !important;
@@ -213,51 +213,51 @@ html, body, [data-testid="stAppViewContainer"],
 }
 [data-testid="stButton"] > button:hover { filter: brightness(1.12) !important; transform: translateY(-1px); }
 [data-testid="stDownloadButton"] > button {
-    background: #0d1320 !important;
-    border: 1px solid #1a2333 !important;
-    color: #5eead4 !important;
+    background: #1d2330 !important;
+    border: 1px solid #2a3140 !important;
+    color: #4f96a0 !important;
     font-size: 17px !important;
     font-family: 'JetBrains Mono', monospace;
     border-radius: 8px !important;
 }
 
 /* ── sliders / toggles ── */
-[data-testid="stSlider"] p { font-size: 17px !important; color: #5b6679 !important; }
-[data-testid="stToggle"] p { font-size: 17px !important; color: #5b6679 !important; }
-[data-testid="stSlider"] [role="slider"] { background-color: #34d399 !important; }
-[data-testid="stSlider"] > div > div > div > div { background: #1d8c6a !important; }
+[data-testid="stSlider"] p { font-size: 17px !important; color: #9aa0ab !important; }
+[data-testid="stToggle"] p { font-size: 17px !important; color: #9aa0ab !important; }
+[data-testid="stSlider"] [role="slider"] { background-color: #5fa88f !important; }
+[data-testid="stSlider"] > div > div > div > div { background: #447b6c !important; }
 
 /* ── progress bar ── */
 [data-testid="stProgressBar"] > div > div {
-    background: linear-gradient(90deg, #1d8c6a, #5eead4) !important;
+    background: linear-gradient(90deg, #447b6c, #4f96a0) !important;
     border-radius: 4px !important;
 }
 
 /* ── images ── */
 [data-testid="stImage"] img {
     border-radius: 8px;
-    border: 1px solid #1a212e;
-    box-shadow: 0 4px 24px rgba(52,211,153,0.08);
+    border: 1px solid #2a3140;
+    box-shadow: 0 4px 24px rgba(95,168,143,0.16);
 }
 
 /* ── expanders ── */
 [data-testid="stExpander"] {
-    background: #0d1118 !important;
-    border: 1px solid #1a212e !important;
+    background: #1d2330 !important;
+    border: 1px solid #2a3140 !important;
     border-radius: 10px !important;
 }
-[data-testid="stExpander"] summary { font-size: 18px !important; font-weight: 600; color: #5eead4 !important; font-family: 'JetBrains Mono', monospace; }
+[data-testid="stExpander"] summary { font-size: 18px !important; font-weight: 600; color: #4f96a0 !important; font-family: 'JetBrains Mono', monospace; }
 
 /* ── dataframe ── */
 [data-testid="stDataFrame"] { border-radius: 10px; overflow: hidden; }
-[data-testid="stDataFrame"] th { background: #0d1320 !important; color: #34d399 !important; font-size: 17px !important; font-family: 'JetBrains Mono', monospace; }
-[data-testid="stDataFrame"] td { font-size: 17px !important; color: #aab4c4 !important; }
+[data-testid="stDataFrame"] th { background: #1d2330 !important; color: #5fa88f !important; font-size: 17px !important; font-family: 'JetBrains Mono', monospace; }
+[data-testid="stDataFrame"] td { font-size: 17px !important; color: #9aa0ab !important; }
 
 /* ── captions ── */
-[data-testid="stCaptionContainer"] p { font-size: 16px !important; color: #3a4254 !important; font-family: 'JetBrains Mono', monospace; }
+[data-testid="stCaptionContainer"] p { font-size: 16px !important; color: #737a87 !important; font-family: 'JetBrains Mono', monospace; }
 
 /* ── dividers ── */
-hr { border-color: #1a212e !important; }
+hr { border-color: #2a3140 !important; }
 
 /* ════════════════════════════════════════════════════════════
    CUSTOM COMPONENTS
@@ -269,8 +269,8 @@ hr { border-color: #1a212e !important; }
 /* ── hero banner ── */
 .hero {
     position: relative;
-    background: linear-gradient(135deg, #0c1a14 0%, #0a1620 55%, #0a1118 100%);
-    border: 1px solid #1c3329;
+    background: linear-gradient(135deg, #1a2230 0%, #161b24 55%, #13171f 100%);
+    border: 1px solid #2f3848;
     border-radius: 12px;
     padding: 26px 34px;
     margin-bottom: 26px;
@@ -282,13 +282,13 @@ hr { border-color: #1a212e !important; }
 .hero::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 500px 300px at 85% 30%, #34d39912, transparent 70%);
+    background: radial-gradient(ellipse 500px 300px at 85% 30%, #5fa88f12, transparent 70%);
     pointer-events: none;
 }
 .hero::after {
     content: '';
     position: absolute; top: 0; left: -60%; width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, #34d39908, transparent);
+    background: linear-gradient(90deg, transparent, #5fa88f08, transparent);
     animation: sweep 7s ease-in-out infinite;
     pointer-events: none;
 }
@@ -297,34 +297,34 @@ hr { border-color: #1a212e !important; }
 .hero-icon {
     position: relative;
     width: 60px; height: 60px;
-    border: 1.5px solid #34d39955;
+    border: 1.5px solid #5fa88f55;
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.7rem;
-    background: #0a1812;
+    background: #1c2b28;
     flex-shrink: 0;
 }
 .hero-icon::before, .hero-icon::after {
     content: ''; position: absolute; width: 9px; height: 9px;
-    border: 1.5px solid #5eead4;
+    border: 1.5px solid #4f96a0;
 }
 .hero-icon::before { top: -1.5px; left: -1.5px; border-right: none; border-bottom: none; }
 .hero-icon::after { bottom: -1.5px; right: -1.5px; border-left: none; border-top: none; }
 
 .hero-eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem; font-weight: 600; color: #5eead4;
+    font-size: 0.7rem; font-weight: 600; color: #4f96a0;
     text-transform: uppercase; letter-spacing: 2.2px; margin: 0 0 6px;
     display: flex; align-items: center; gap: 8px;
 }
-.hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: #5eead4; box-shadow: 0 0 8px #5eead4; animation: blink 2s ease-in-out infinite; display: inline-block; }
+.hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: #4f96a0; box-shadow: 0 0 8px #4f96a0; animation: blink 2s ease-in-out infinite; display: inline-block; }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .hero-title {
-    font-size: 2rem; font-weight: 800; color: #fff;
+    font-size: 2rem; font-weight: 800; color: #e6e1d6;
     letter-spacing: -0.4px; margin: 0 0 4px;
 }
-.hero-sub { font-size: 0.92rem; color: #5b6679; margin: 0; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.2px; }
+.hero-sub { font-size: 0.92rem; color: #9aa0ab; margin: 0; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.2px; }
 .hero-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
 .badge {
     border-radius: 4px; padding: 7px 14px;
@@ -332,24 +332,21 @@ hr { border-color: #1a212e !important; }
     font-family: 'JetBrains Mono', monospace;
     text-transform: uppercase;
 }
-.badge-purple { background: #0d2a20; border: 1px solid #2a5f4a; color: #5eead4; }
-.badge-cyan   { background: #1a1408; border: 1px solid #6b551a; color: #f0b429; }
+.badge-purple { background: #1c2b28; border: 1px solid #4a7d6c; color: #4f96a0; }
+.badge-cyan   { background: #2b2419; border: 1px solid #a8843f; color: #c79a4b; }
 
 /* ── section label ── */
 .sec-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.88rem; font-weight: 600; color: #4a5568;
-    text-transform: uppercase; letter-spacing: 2px;
+    font-size: 0.86rem; font-weight: 600; color: #8a8f9c;
+    text-transform: uppercase; letter-spacing: 1.6px;
     margin: 0 0 16px;
-    display: flex; align-items: center; gap: 10px;
 }
-.sec-label::before { content: '//'; color: #34d399; font-weight: 700; }
-.sec-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, #1a212e, transparent); }
 
 /* ── panel card ── */
 .panel {
-    background: #0d1118;
-    border: 1px solid #1a212e;
+    background: #1d2330;
+    border: 1px solid #2a3140;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 16px;
@@ -357,8 +354,8 @@ hr { border-color: #1a212e !important; }
 
 /* ── model selector card ── */
 .mcard {
-    background: #0d1320;
-    border: 1px solid #1a2333;
+    background: #1d2330;
+    border: 1px solid #2a3140;
     border-radius: 10px;
     padding: 16px 18px;
     margin-bottom: 10px;
@@ -367,28 +364,28 @@ hr { border-color: #1a212e !important; }
 }
 .mcard:hover { transform: translateY(-1px); }
 .mcard-active {
-    border-color: #34d399;
-    background: linear-gradient(160deg, #0e1c16, #0d1320);
-    box-shadow: 0 0 0 1px #34d39933, 0 8px 28px -8px #34d39922;
+    border-color: #5fa88f;
+    background: linear-gradient(160deg, #1c2b28, #1d2330);
+    box-shadow: 0 0 0 1px #5fa88f33, 0 8px 28px -8px #5fa88f2a;
 }
 .mcard-active::before {
     content: 'ACTIVE'; position: absolute; top: -1px; right: 14px;
-    background: #34d399; color: #06140f; font-family: 'JetBrains Mono', monospace;
+    background: #5fa88f; color: #16231c; font-family: 'JetBrains Mono', monospace;
     font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
     padding: 2px 8px; border-radius: 0 0 4px 4px;
 }
-.mcard-label { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #4a5568; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
+.mcard-label { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #8a8f9c; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
 .mcard-val   { font-size: 2.1rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
 /* ── info card ── */
 .icard {
-    background: #0d1118;
-    border: 1px solid #1a212e;
+    background: #1d2330;
+    border: 1px solid #2a3140;
     border-radius: 10px;
     padding: 22px 24px;
     margin-bottom: 14px;
     font-size: 1.08rem;
-    color: #aab4c4;
+    color: #9aa0ab;
     line-height: 2.1;
 }
 
@@ -399,61 +396,60 @@ hr { border-color: #1a212e !important; }
     padding: 34px 32px;
     margin-bottom: 20px;
     text-align: center;
-    background: radial-gradient(ellipse 600px 300px at 50% 0%, #0e2a20, #0a0f16 70%);
-    border: 1px solid #1c3329;
+    background: radial-gradient(ellipse 600px 300px at 50% 0%, #1c2b28, #13171f 70%);
+    border: 1px solid #2f3848;
     overflow: hidden;
 }
-.pred-hero .lock-corner { position: absolute; width: 20px; height: 20px; border: 2px solid #34d399aa; }
+.pred-hero .lock-corner { position: absolute; width: 20px; height: 20px; border: 2px solid #5fa88faa; }
 .pred-hero .lock-tl { top: 14px; left: 14px; border-right: none; border-bottom: none; }
 .pred-hero .lock-tr { top: 14px; right: 14px; border-left: none; border-bottom: none; }
 .pred-hero .lock-bl { bottom: 14px; left: 14px; border-right: none; border-top: none; }
 .pred-hero .lock-br { bottom: 14px; right: 14px; border-left: none; border-top: none; }
-.pred-scene  { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #4a5568; text-transform: uppercase; letter-spacing: 2.8px; margin-bottom: 14px; font-weight: 600; }
-.pred-scene::before { content: '◆ '; color: #34d399; }
-.pred-name   { font-size: 2.4rem; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: -0.3px; }
+.pred-scene  { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: #8a8f9c; text-transform: uppercase; letter-spacing: 2.8px; margin-bottom: 14px; font-weight: 600; }
+.pred-name   { font-size: 2.4rem; font-weight: 800; color: #e6e1d6; margin-bottom: 10px; letter-spacing: -0.3px; }
 .pred-conf   { font-size: 4.4rem; font-weight: 800; line-height: 1; letter-spacing: -1.5px; font-family: 'JetBrains Mono', monospace; }
-.pred-model  { font-size: 1.05rem; color: #4a5568; margin-top: 16px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+.pred-model  { font-size: 1.05rem; color: #8a8f9c; margin-top: 16px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
 
 /* ── probability bars ── */
 .pb-row   { display: flex; align-items: center; gap: 14px; margin-bottom: 13px; }
-.pb-label { min-width: 200px; font-size: 1.08rem; color: #aab4c4; font-weight: 500; }
-.pb-track { flex: 1; background: #11151f; border-radius: 4px; height: 22px; overflow: hidden; border: 1px solid #1a212e; }
+.pb-label { min-width: 200px; font-size: 1.08rem; color: #9aa0ab; font-weight: 500; }
+.pb-track { flex: 1; background: #222837; border-radius: 4px; height: 22px; overflow: hidden; border: 1px solid #2a3140; }
 .pb-fill  { height: 100%; border-radius: 3px; transition: width .4s cubic-bezier(.16,1,.3,1); }
 .pb-pct   { min-width: 64px; text-align: right; font-size: 1.08rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
 /* ── stat chips ── */
 .stat-row { display: flex; gap: 14px; margin-bottom: 20px; }
 .stat-chip {
-    flex: 1; background: #0d1118; border: 1px solid #1a212e;
+    flex: 1; background: #1d2330; border: 1px solid #2a3140;
     border-radius: 10px; padding: 18px 14px; text-align: center;
     transition: border-color .15s;
 }
-.stat-chip:hover { border-color: #2a5f4a; }
-.stat-chip-label { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; color: #4a5568; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+.stat-chip:hover { border-color: #4a7d6c; }
+.stat-chip-label { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; color: #8a8f9c; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
 .stat-chip-val   { font-size: 1.95rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
 /* ── batch thumbnail ── */
-.bthumb { background: #0d1118; border: 1px solid #1a212e; border-radius: 8px; padding: 12px; text-align: center; transition: border-color .15s; }
-.bthumb:hover { border-color: #2a5f4a; }
-.bthumb-fname { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #3a4254; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bthumb-pred  { font-size: 1.08rem; font-weight: 700; color: #e8ecf4; margin: 6px 0 3px; }
+.bthumb { background: #1d2330; border: 1px solid #2a3140; border-radius: 8px; padding: 12px; text-align: center; transition: border-color .15s; }
+.bthumb:hover { border-color: #4a7d6c; }
+.bthumb-fname { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #737a87; margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bthumb-pred  { font-size: 1.08rem; font-weight: 700; color: #e6e1d6; margin: 6px 0 3px; }
 .bthumb-conf  { font-size: 1.08rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
 /* ── validation pills ── */
-.v-ok   { background: #0a1812; border-left: 3px solid #34d399; border-radius: 6px; padding: 13px 18px; color: #5eead4; margin-bottom: 10px; font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
-.v-warn { background: #1a1408; border-left: 3px solid #f0b429; border-radius: 6px; padding: 13px 18px; color: #f0b429; margin-bottom: 8px;  font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
-.v-err  { background: #1a0c0c; border-left: 3px solid #f0556a; border-radius: 6px; padding: 13px 18px; color: #f0556a; margin-bottom: 8px;  font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+.v-ok   { background: #1c2b28; border-left: 3px solid #5fa88f; border-radius: 6px; padding: 13px 18px; color: #4f96a0; margin-bottom: 10px; font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+.v-warn { background: #2b2419; border-left: 3px solid #c79a4b; border-radius: 6px; padding: 13px 18px; color: #c79a4b; margin-bottom: 8px;  font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+.v-err  { background: #2b1f20; border-left: 3px solid #bf6760; border-radius: 6px; padding: 13px 18px; color: #bf6760; margin-bottom: 8px;  font-size: 17px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
 
 /* ── empty state ── */
 .empty-state {
     text-align: center;
     padding: 64px 20px;
-    border: 1px dashed #1c2530;
+    border: 1px dashed #2f3848;
     border-radius: 14px;
-    background: #0a0d14;
+    background: #1a1f2a;
 }
 .empty-icon  { font-size: 3.5rem; opacity: 0.5; }
-.empty-text  { font-size: 1.15rem; font-weight: 500; color: #3a4254; margin-top: 18px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px; }
+.empty-text  { font-size: 1.15rem; font-weight: 500; color: #737a87; margin-top: 18px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px; }
 
 /* ── sidebar nav item ── */
 .snav {
@@ -502,7 +498,7 @@ def _available_models():
         run = pt.stem.replace("_best", "")
         if run in SKIP_NAMES:
             continue
-        meta  = MODEL_META.get(run, {"icon": "🤖", "full": run.replace("_"," ").title(), "desc": "", "color": "#34d399"})
+        meta  = MODEL_META.get(run, {"icon": "🤖", "full": run.replace("_"," ").title(), "desc": "", "color": "#5fa88f"})
         label = f"{meta['icon']} {meta['full']}"
         out[label] = {"path": pt, "run_name": run, **meta}
     return out
@@ -627,7 +623,7 @@ def overlay_cam(img: np.ndarray, cam: np.ndarray, alpha: float = 0.45) -> np.nda
 
 
 def conf_color(c: float) -> str:
-    return "#34d399" if c >= 0.80 else "#f0b429" if c >= 0.50 else "#f0556a"
+    return "#5fa88f" if c >= 0.80 else "#c79a4b" if c >= 0.50 else "#bf6760"
 
 
 def prob_bars_html(probs, class_names, top_k, highlight_idx):
@@ -638,14 +634,14 @@ def prob_bars_html(probs, class_names, top_k, highlight_idx):
         name  = class_names[i]
         emoji = CLASS_EMOJIS.get(name, "📍")
         if i == highlight_idx:
-            color = "#34d399"
-            grad  = "linear-gradient(90deg,#1d8c6a,#34d399)"
+            color = "#5fa88f"
+            grad  = "linear-gradient(90deg,#447b6c,#5fa88f)"
         elif rank == 1:
-            color = "#5eead4"; grad = "linear-gradient(90deg,#1a6e63,#5eead4)"
+            color = "#4f96a0"; grad = "linear-gradient(90deg,#3f7c84,#4f96a0)"
         elif rank == 2:
-            color = "#f0b429"; grad = "#8a6a1f"
+            color = "#c79a4b"; grad = "#b08e4f"
         else:
-            color = "#4a5568"; grad = "#1a212e"
+            color = "#8a8f9c"; grad = "#2a3140"
         rows.append(f"""
         <div class="pb-row">
           <div class="pb-label">{emoji} {name.replace("_"," ").title()}</div>
@@ -744,14 +740,14 @@ if "Report" in mode:
     st.markdown("<br>", unsafe_allow_html=True)
     c1, c2 = st.columns(2, gap="large")
     with c1:
-        acc_color = rep_meta.get("color", "#34d399")
+        acc_color = rep_meta.get("color", "#5fa88f")
         st.markdown(f"""
         <div class="icard">
           <div class="mcard-label">Architecture</div>
-          <div style="font-size:1.4rem;font-weight:800;color:#e8ecf4;margin-bottom:8px;">
+          <div style="font-size:1.4rem;font-weight:800;color:#e6e1d6;margin-bottom:8px;">
             {rep_meta.get('icon','')} {rep_meta.get('full','')}
           </div>
-          <div style="color:#aab4c4;line-height:1.9;">{arch_desc}</div>
+          <div style="color:#9aa0ab;line-height:1.9;">{arch_desc}</div>
           <div style="margin-top:14px;font-size:1rem;">
             Parameters: <span style="color:{acc_color};font-weight:700;">{params}</span><br>
             Best val macro-F1: <span style="color:{acc_color};font-weight:800;font-size:1.2rem;">{rep_f1:.4f}</span>
@@ -897,15 +893,15 @@ with col_model:
     sel_label  = st.selectbox("model_select", model_keys, label_visibility="collapsed")
     sel        = available[sel_label]
     val_f1     = _ckpt_val_f1(sel["path"])
-    mc         = sel.get("color", "#34d399")
+    mc         = sel.get("color", "#5fa88f")
 
     st.markdown(f"""
     <div class="mcard mcard-active" style="border-color:{mc}55;box-shadow:0 0 0 1px {mc}22;">
       <div style="font-size:1.8rem;margin-bottom:6px;">{sel['icon']}</div>
-      <div style="font-size:1.1rem;font-weight:800;color:#e8ecf4;">{sel['full']}</div>
-      <div style="font-size:0.95rem;color:#5b6679;margin-top:5px;">{sel['desc']}</div>
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #1a2333;">
-        <div style="font-size:0.78rem;color:#4a5568;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">Val macro-F1</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#e6e1d6;">{sel['full']}</div>
+      <div style="font-size:0.95rem;color:#9aa0ab;margin-top:5px;">{sel['desc']}</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #2a3140;">
+        <div style="font-size:0.78rem;color:#8a8f9c;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">Val macro-F1</div>
         <div style="font-size:2rem;font-weight:900;color:{mc};">{val_f1:.4f}</div>
       </div>
     </div>
@@ -914,9 +910,9 @@ with col_model:
     params_str, arch_str = ARCH_INFO.get(sel["run_name"], ("?", ""))
     st.markdown(f"""
     <div class="mcard" style="margin-top:4px;">
-      <div style="font-size:0.78rem;color:#4a5568;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:8px;">Architecture</div>
-      <div style="font-size:0.95rem;color:#5b6679;line-height:1.8;">{arch_str}</div>
-      <div style="margin-top:10px;font-size:0.95rem;color:#5b6679;">
+      <div style="font-size:0.78rem;color:#8a8f9c;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:8px;">Architecture</div>
+      <div style="font-size:0.95rem;color:#9aa0ab;line-height:1.8;">{arch_str}</div>
+      <div style="margin-top:10px;font-size:0.95rem;color:#9aa0ab;">
         <span style="color:{mc};font-weight:700;">{params_str}</span> parameters
       </div>
     </div>
@@ -982,14 +978,14 @@ with col_analysis:
                         with torch.no_grad():
                             p2 = torch.softmax(m2(preprocess(img_rgb, cfg2)), dim=1)[0].numpy()
                         idx2 = int(p2.argmax()); lbl2 = cn2[idx2]; conf2 = float(p2[idx2])
-                        c2   = conf_color(conf2); mc2  = meta.get("color", "#34d399")
+                        c2   = conf_color(conf2); mc2  = meta.get("color", "#5fa88f")
                         pred_labels.append(lbl2)
                         st.markdown(f"""
                         <div class="mcard" style="text-align:center;border-color:{mc2}44;">
                           <div style="font-size:1.6rem;">{meta['icon']}</div>
-                          <div style="font-weight:700;color:#e8ecf4;font-size:1rem;margin:6px 0 2px;">{meta['full']}</div>
+                          <div style="font-weight:700;color:#e6e1d6;font-size:1rem;margin:6px 0 2px;">{meta['full']}</div>
                           <div style="font-size:1.3rem;">{CLASS_EMOJIS.get(lbl2,'📍')}</div>
-                          <div style="font-weight:700;color:#e8ecf4;font-size:1rem;margin:4px 0;">{lbl2.replace('_',' ').title()}</div>
+                          <div style="font-weight:700;color:#e6e1d6;font-size:1rem;margin:4px 0;">{lbl2.replace('_',' ').title()}</div>
                           <div style="font-size:1.6rem;font-weight:900;color:{c2};">{conf2:.1%}</div>
                         </div>""", unsafe_allow_html=True)
 
@@ -1055,11 +1051,11 @@ with col_analysis:
                 <div class="stat-row">
                   <div class="stat-chip">
                     <div class="stat-chip-label">Total</div>
-                    <div class="stat-chip-val" style="color:#5eead4;">{len(results_list)}</div>
+                    <div class="stat-chip-val" style="color:#4f96a0;">{len(results_list)}</div>
                   </div>
                   <div class="stat-chip">
                     <div class="stat-chip-label">Valid</div>
-                    <div class="stat-chip-val" style="color:#34d399;">{len(valid_res)}</div>
+                    <div class="stat-chip-val" style="color:#5fa88f;">{len(valid_res)}</div>
                   </div>
                   <div class="stat-chip">
                     <div class="stat-chip-label">Avg Conf</div>
@@ -1067,7 +1063,7 @@ with col_analysis:
                   </div>
                   <div class="stat-chip">
                     <div class="stat-chip-label">Top Class</div>
-                    <div class="stat-chip-val" style="font-size:1rem;color:#f0b429;">{CLASS_EMOJIS.get(top_cls,'📍')} {top_cls.replace('_',' ').title()}</div>
+                    <div class="stat-chip-val" style="font-size:1rem;color:#c79a4b;">{CLASS_EMOJIS.get(top_cls,'📍')} {top_cls.replace('_',' ').title()}</div>
                   </div>
                 </div>""", unsafe_allow_html=True)
 
@@ -1092,7 +1088,7 @@ with col_analysis:
                     st.markdown('<p class="sec-label" style="margin-top:18px;">Class Distribution</p>', unsafe_allow_html=True)
                     df_d = pd.DataFrame(cc_map.items(), columns=["Class", "Count"]).sort_values("Count", ascending=False)
                     df_d["Class"] = df_d["Class"].str.replace("_", " ").str.title()
-                    st.bar_chart(df_d.set_index("Class"), color="#34d399", height=260)
+                    st.bar_chart(df_d.set_index("Class"), color="#5fa88f", height=260)
 
                 st.markdown('<p class="sec-label" style="margin-top:18px;">Full Results Table</p>', unsafe_allow_html=True)
                 df_out = pd.DataFrame([{
