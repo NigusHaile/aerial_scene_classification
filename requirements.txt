@@ -8,7 +8,7 @@ peft>=0.7.0                 # LoRA adapters for ViT (parameter-efficient fine-tu
 
 #  Data / augmentation 
 albumentations>=1.4.0       # aerial-aware augmentation pipeline
-opencv-python>=4.8          # image I/O, Grad-CAM overlay, resize
+opencv-python-headless>=4.8 # image I/O, Grad-CAM overlay, resize (headless for server/cloud)
 Pillow>=10.0                # TIFF / PNG loading
 numpy>=1.24,<3.0
 pandas>=2.0
