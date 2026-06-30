@@ -38,7 +38,7 @@ ipykernel>=6.25
 
 #  Optional extras 
 # Install these for richer outputs; the pipeline degrades gracefully if absent.
-umap-learn>=0.5             # UMAP embedding plots in EDA (optional)
+umap-learn>=0.5.7           # UMAP embedding plots in EDA (optional); 0.5.7+ avoids numba==0.53.1 pin
 fvcore>=0.1.5               # FLOPs counting — falls back to thop, then skips (optional)
 thop>=0.1.1                 # FLOPs counting fallback (optional)
 weasyprint>=60              # PDF report export (optional)
