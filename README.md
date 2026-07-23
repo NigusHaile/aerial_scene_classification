@@ -35,29 +35,27 @@ Primary checkpoint selection metric: **validation macro-F1**.
 - **Grad-CAM** interpretability (implemented from scratch with hooks — no extra deps).
 - **Optuna** hyper-parameter search (TPE sampler + Median pruner) with saved history
   & importance plots.
-- **Auto-generated report** in Markdown + HTML (PDF if WeasyPrint is installed).
 - **Streamlit** dashboard for single & batch inference, Grad-CAM visualization,
   and per-model performance reports.
-
 ---
 
 ## Design Decisions
 
-1. **Custom CNN — residual + SE-attention architecture.** A from-scratch CNN with
+1. **Custom CNN: residual + SE-attention architecture.** A from-scratch CNN with
    a 3×3 conv stem followed by four `ResidualBlock` stages (widths 64→128→256→512),
    each block containing two Conv-BN-ReLU layers plus a Squeeze-and-Excitation
    channel-attention module. Global average pooling and a dropout head follow.
    Trained end-to-end on the UC Merced dataset (~11.3 M parameters, no pretrained
    weights), it serves as the baseline to quantify how much transfer learning helps.
-3. **Pretrained backbone — DenseNet-121.** Dense skip connections transfer well to
+3. **Pretrained backbone — DenseNet-121:** Dense skip connections transfer well to
    fine-grained overhead imagery and the compact architecture (~7 M params) trains
    quickly. The backbone is frozen for the first 2 epochs to warm up the head, then
    fully fine-tuned.
-4. **ViT-B/16 + LoRA.** Parameter-efficient fine-tuning via PEFT LoRA adapters on
+4. **ViT-B/16 + LoRA:** Parameter-efficient fine-tuning via PEFT LoRA adapters on
    `qkv` and `proj` attention modules. Only ~0.55% of parameters are trainable,
    yet the model achieves the best accuracy, demonstrating that large frozen
    pretrained ViTs transfer extremely well even to small aerial datasets.
-5. **Grad-CAM** is the interpretability method (`src/evaluate.py`), implemented
+5. **Grad-CAM:** is the interpretability method (`src/evaluate.py`), implemented
    from scratch with forward/backward hooks — no extra dependency needed.
 6. **Two imbalance techniques suited to this *balanced* dataset:**
    **label smoothing** (default — regularises confident logits, helps confusable
