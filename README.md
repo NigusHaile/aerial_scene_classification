@@ -1,5 +1,4 @@
 # Aerial Scene Classification: UC Merced Land-Use (21 Classes)
-
 End-to-end, research-grade deep-learning pipeline that classifies 256×256 RGB
 aerial scenes into 21 land-use categories. The project compares a **custom
 residual-attention CNN**, a **fine-tuned DenseNet-121 backbone**, and a
@@ -8,10 +7,7 @@ dashboard.
 
 > Dataset: UC Merced Land-Use — 21 classes × 100 images = **2,100** images.
 
----
-
 ## Results
-
 | Model | Params (M) | Test Accuracy | Test Macro-F1 | Train Time (min) |
 |---|---|---|---|---|
 | **ViT-B/16 + LoRA** | 86.06 | **99.05%** | **0.9905** | 3.6 |
@@ -20,10 +16,7 @@ dashboard.
 
 Primary checkpoint selection metric: **validation macro-F1**.
 
----
-
 ## Highlights
-
 - **Config-driven** (`configs/config.yaml`) — every tunable in one place, CLI-overridable.
 - **Strict reproducibility** — global seed 42, deterministic cuDNN, frozen JSON splits.
 - **Rigorous data hygiene** — corruption checks, perceptual-hash de-duplication,
@@ -37,10 +30,8 @@ Primary checkpoint selection metric: **validation macro-F1**.
   & importance plots.
 - **Streamlit** dashboard for single & batch inference, Grad-CAM visualization,
   and per-model performance reports.
----
 
 ## Design Decisions
-
 1. **Custom CNN: residual + SE-attention architecture.** A from-scratch CNN with
    a 3×3 conv stem followed by four `ResidualBlock` stages (widths 64→128→256→512),
    each block containing two Conv-BN-ReLU layers plus a Squeeze-and-Excitation
@@ -63,11 +54,7 @@ Primary checkpoint selection metric: **validation macro-F1**.
    (inverse-frequency; a safety net if any images are quarantined).
    Switch via `imbalance.technique` in the config.
 
----
-
 ## Project Structure
-
-```
 aerial_scene_classification/
 ├── configs/
 │   └── config.yaml              # all hyper-parameters & paths
@@ -95,7 +82,6 @@ aerial_scene_classification/
 ```
 
 ## Setup
-
 # 1. Install dependencies
 pip install -r requirements.txt
 
@@ -105,7 +91,6 @@ pip install -r requirements.txt
 # 3. Place the UC Merced dataset so this path exists:
 #      data/Images/<class_name>/<image>.tif
 #    (edit paths.data_root in configs/config.yaml if your path differs)
-```
 
 ## Usage
 
@@ -123,7 +108,6 @@ The dashboard supports single-image and batch inference, Grad-CAM overlays,
 model comparison tables, and EDA figures for all trained checkpoints.
 
 ### Config overrides
-
 Any field in `configs/config.yaml` can be overridden from the CLI using dotted
 `key=value` syntax passed to `load_config()`:
 
@@ -131,8 +115,6 @@ Any field in `configs/config.yaml` can be overridden from the CLI using dotted
 from src.utils import load_config
 cfg = load_config("configs/config.yaml", overrides=["training.epochs=50", "training.lr=1e-4"])
 ```
-
----
 
 ## Outputs
 
@@ -148,10 +130,8 @@ After a training run you will find:
 | `results_figures/config_used.yaml` | Exact config snapshot for the run |
 | `bestmodels/` | `<model_name>_best.pt` — checkpoint with best val macro-F1 |
 
----
 
 ## Reproducibility
-
 - **Seed = 42** everywhere — Python `random`, NumPy, PyTorch, CUDA, DataLoader workers.
 - **cuDNN deterministic** mode enabled; `CUBLAS_WORKSPACE_CONFIG=:4096:8` set.
 - **Frozen split** — `results_figures/splits.json` is written once and reused by every
@@ -159,10 +139,7 @@ After a training run you will find:
 - **Config snapshot** — `results_figures/config_used.yaml` captures the exact
   hyper-parameters for every run.
 
----
-
 ## Optional Dependencies
-
 | Package | Purpose | Fallback |
 |---|---|---|
 | `umap-learn` | UMAP embedding plots in EDA | skipped gracefully |
