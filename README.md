@@ -1,4 +1,4 @@
-# Aerial Scene Classification — UC Merced Land-Use (21 Classes)
+# Aerial Scene Classification: UC Merced Land-Use (21 Classes)
 
 End-to-end, research-grade deep-learning pipeline that classifies 256×256 RGB
 aerial scenes into 21 land-use categories. The project compares a **custom
@@ -94,11 +94,8 @@ aerial_scene_classification/
 └── requirements.txt
 ```
 
----
-
 ## Setup
 
-```bash
 # 1. Install dependencies
 pip install -r requirements.txt
 
@@ -109,8 +106,6 @@ pip install -r requirements.txt
 #      data/Images/<class_name>/<image>.tif
 #    (edit paths.data_root in configs/config.yaml if your path differs)
 ```
-
----
 
 ## Usage
 
