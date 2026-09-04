@@ -55,7 +55,7 @@ Primary checkpoint selection metric: **validation macro-F1**.
    Switch via `imbalance.technique` in the config.
 
 ## Project Structure
-
+```
 aerial_scene_classification/
 ├── configs/
 │   └── config.yaml              # all hyper-parameters & paths
