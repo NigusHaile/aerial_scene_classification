@@ -83,15 +83,15 @@ aerial_scene_classification/
 ```
 
 ## Setup
-# 1. Install dependencies
+## 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Install PyTorch matching your CUDA version
-#    See https://pytorch.org/get-started for the correct command
+## 2. Install PyTorch matching your CUDA version
+##    See https://pytorch.org/get-started for the correct command
 
-# 3. Place the UC Merced dataset so this path exists:
-#      data/Images/<class_name>/<image>.tif
-#    (edit paths.data_root in configs/config.yaml if your path differs)
+## 3. Place the UC Merced dataset so this path exists:
+##      data/Images/<class_name>/<image>.tif
+##    (edit paths.data_root in configs/config.yaml if your path differs)
 
 ## Usage
 
